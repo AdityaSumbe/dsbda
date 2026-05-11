@@ -1,0 +1,22 @@
+Windows:   wevtutil cl System
+
+
+Ubuntu/Linux:   journalctl 
+
+		sudo journalctl --rotate
+		
+		sudo journalctl --vacuum-time=1s
+
+		
+If Error Occurs
+
+Check whether systemd-journald is running:
+
+
+systemctl status systemd-journald
+
+
+Restart the service if needed:
+
+
+sudo systemctl restart systemd-journald

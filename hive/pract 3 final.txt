@@ -1,0 +1,77 @@
+create database mydb2;
+use mydb2;
+
+create table flight(fno int, year int, dest varchar(10), dealy float);
+
+alter table flight rename to air_flight;
+
+alter table air_flight add columns (source varchar(10));
+
+drop table flight;
+
+desc air_flight;
+
+create table flight(fno int, year int, dest varchar(10), delay float)
+row format delimited
+fields terminated by ','
+lines terminated by '\n'
+stored as textfile;
+
+insert into flight values(123, 2009, 'mumbai', 30.6);
+insert into flight values(124, 2008, 'pune', 50.6);
+INSERT INTO flight VALUES (923, 2009, 'mumbai', 60.0);
+INSERT INTO flight VALUES (156, 2009, 'kolhapur', 78.0);
+INSERT INTO flight VALUES (112, 2009, 'pune', 0.0);
+INSERT INTO flight VALUES (322, 2008, 'nagpur', 90.0);
+INSERT INTO flight VALUES (132, 2008, 'aurangabad', 67.0);
+
+
+select * from flight;
+
+create table nflight(fno int, year int, source varchar(10))
+row format delimited
+fields terminated by ','
+lines terminated by '\n'
+stored as textfile;
+
+insert into nflight values(923, 2009, 'pune');
+INSERT INTO nflight VALUES (101, 2008, 'Pune');
+INSERT INTO nflight VALUES (102, 2009, 'Mumbai');
+INSERT INTO nflight VALUES (112, 2010, 'Delhi');
+INSERT INTO nflight VALUES (104, 2011, 'Chennai');
+INSERT INTO nflight VALUES (156, 2012, 'Kolkata');
+
+select * from nflight;
+
+select a.fno, a.year, a.dest, a.delay, b.source
+from flight a join nflight b
+on (a.fno = b.fno);
+
+create index flight_index on table flight(fno)
+as 'org.apache.hadoop.hive.ql.index.compact.CompactIndexHandler'
+WITH DEFERRED REBUILD;
+
+show tables;
+SELECT AVG(delay)
+FROM flight
+WHERE year = 2008;
+
+CREATE EXTERNAL TABLE external_airports (
+    airport_code STRING,
+    airport_name STRING,
+    city STRING,
+    state STRING
+)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY ','
+STORED AS TEXTFILE;
+
+INSERT INTO external_airports 
+VALUES ('CSTM','shivaji_maharaj','mumbai','MH');
+
+SELECT * FROM external_airports;
+
+LOAD DATA LOCAL INPATH '/mnt/c/Users/Gaurav/OneDrive/Desktop/hive/text.txt'
+INTO TABLE external_airports;
+
+SELECT * FROM external_airports;
